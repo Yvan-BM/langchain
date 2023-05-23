@@ -102,11 +102,12 @@ class ConstitutionalChain(Chain):
         #     **inputs,
         #     callbacks=_run_manager.get_child(),
         # )
-        initial_response = self.my_response
+        response = self.my_response
+        initial_response = response
         input_prompt = self.chain.prompt.format(**inputs)
 
         _run_manager.on_text(
-            text="Initial response: " + self.my_response + "\n\n",
+            text="Initial response: " + response + "\n\n",
             verbose=self.verbose,
             color="yellow",
         )
