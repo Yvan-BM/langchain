@@ -62,7 +62,7 @@ class ConstitutionalChain(Chain):
     @classmethod
     def from_llm(
         cls,
-        my_response: str,
+        # my_response: str,
         llm: BaseLanguageModel,
         chain: LLMChain,
         critique_prompt: BasePromptTemplate = CRITIQUE_PROMPT,
@@ -74,7 +74,7 @@ class ConstitutionalChain(Chain):
         revision_chain = LLMChain(llm=llm, prompt=revision_prompt)
         return cls(
             chain=chain,
-            my_response=my_response,
+            # my_response=my_response,
             critique_chain=critique_chain,
             revision_chain=revision_chain,
             **kwargs,
@@ -102,7 +102,7 @@ class ConstitutionalChain(Chain):
         #     **inputs,
         #     callbacks=_run_manager.get_child(),
         # )
-        response = self.my_response
+        response = inputs["my_response"]
         initial_response = response
         input_prompt = self.chain.prompt.format(**inputs)
 
