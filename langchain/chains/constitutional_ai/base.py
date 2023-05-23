@@ -62,6 +62,7 @@ class ConstitutionalChain(Chain):
     @classmethod
     def from_llm(
         cls,
+        my_response: str,
         llm: BaseLanguageModel,
         chain: LLMChain,
         critique_prompt: BasePromptTemplate = CRITIQUE_PROMPT,
@@ -73,6 +74,7 @@ class ConstitutionalChain(Chain):
         revision_chain = LLMChain(llm=llm, prompt=revision_prompt)
         return cls(
             chain=chain,
+            my_response=my_response,
             critique_chain=critique_chain,
             revision_chain=revision_chain,
             **kwargs,
@@ -96,15 +98,15 @@ class ConstitutionalChain(Chain):
         run_manager: Optional[CallbackManagerForChainRun] = None,
     ) -> Dict[str, Any]:
         _run_manager = run_manager or CallbackManagerForChainRun.get_noop_manager()
-        response = self.chain.run(
-            **inputs,
-            callbacks=_run_manager.get_child(),
-        )
-        initial_response = response
+        # response = self.chain.run(
+        #     **inputs,
+        #     callbacks=_run_manager.get_child(),
+        # )
+        initial_response = self.my_response
         input_prompt = self.chain.prompt.format(**inputs)
 
         _run_manager.on_text(
-            text="Initial response: " + response + "\n\n",
+            text="Initial response: " + self.my_response + "\n\n",
             verbose=self.verbose,
             color="yellow",
         )
