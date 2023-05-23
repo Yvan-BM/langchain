@@ -96,11 +96,15 @@ class ConstitutionalChain(Chain):
         run_manager: Optional[CallbackManagerForChainRun] = None,
     ) -> Dict[str, Any]:
         _run_manager = run_manager or CallbackManagerForChainRun.get_noop_manager()
-        print(len(inputs))
-        response = self.chain.run(
-            **inputs,
-            callbacks=_run_manager.get_child(),
-        )
+        if "response" in inputs.keys():
+            response = inputs["response"]
+            del inputs["response"]
+        else:
+            response = self.chain.run(
+                **inputs,
+                callbacks=_run_manager.get_child(),
+            )
+
         initial_response = response
         input_prompt = self.chain.prompt.format(**inputs)
 
