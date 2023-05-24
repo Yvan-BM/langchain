@@ -74,6 +74,7 @@ class ConstitutionalChain(Chain):
         critique_chain = LLMChain(llm=llm, prompt=critique_prompt)
         revision_chain = LLMChain(llm=llm, prompt=revision_prompt)
         return cls(
+            llm=llm,
             chain=chain,
             critique_chain=critique_chain,
             revision_chain=revision_chain,
