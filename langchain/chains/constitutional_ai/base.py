@@ -104,7 +104,7 @@ class ConstitutionalChain(Chain):
                 **inputs,
                 callbacks=_run_manager.get_child(),
             )
-        print(response)
+        
         initial_response = response
         input_prompt = self.chain.prompt.format(**inputs)
 
@@ -131,6 +131,7 @@ class ConstitutionalChain(Chain):
             # in this case, initial_output is the same as output,
             # but we'll keep it for consistency
             if "no critique needed" in critique.lower():
+                print("I am here")
                 critiques_and_revisions.append((critique, ""))
                 continue
 
