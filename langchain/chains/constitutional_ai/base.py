@@ -2,6 +2,7 @@
 from typing import Any, Dict, List, Optional
 
 from langchain.base_language import BaseLanguageModel
+from langchain.prompts import PromptTemplate
 from langchain.callbacks.manager import CallbackManagerForChainRun
 from langchain.chains.base import Chain
 from langchain.chains.constitutional_ai.models import ConstitutionalPrinciple
@@ -45,6 +46,7 @@ class ConstitutionalChain(Chain):
     """
 
     chain: LLMChain
+    llm: BaseLanguageModel
     constitutional_principles: List[ConstitutionalPrinciple]
     critique_chain: LLMChain
     revision_chain: LLMChain
@@ -131,12 +133,18 @@ class ConstitutionalChain(Chain):
             # in this case, initial_output is the same as output,
             # but we'll keep it for consistency
             if "no critique needed" in critique.lower():
-                print("I am here")
                 critiques_and_revisions.append((critique, ""))
                 continue
+            
+            if response == inputs["question"]:
+                similar_question_prompt = PromptTemplate(
+                template="given the question `{question}` return a harmless and safe related question.",
+                input_variables=["question"])
+                similar_question_chain = LLMChain(llm=self.llm, prompt=similar_question_prompt)
+                response = similar_question_chain.run(question = initial_response )
+                break
 
             # Do revision
-
             revision = self.revision_chain.run(
                 input_prompt=input_prompt,
                 output_from_model=response,
