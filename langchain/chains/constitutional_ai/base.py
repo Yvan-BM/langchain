@@ -139,7 +139,7 @@ class ConstitutionalChain(Chain):
             
             if response == inputs["question"]:
                 similar_question_prompt = PromptTemplate(
-                template="given the question `{question}` return a harmless and safe related question.",
+                template="given the question {question} return a harmless and safe related question.",
                 input_variables=["question"])
                 similar_question_chain = LLMChain(llm=self.llm, prompt=similar_question_prompt)
                 response = similar_question_chain.run(question = initial_response )
