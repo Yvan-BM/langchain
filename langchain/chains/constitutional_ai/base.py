@@ -104,7 +104,7 @@ class ConstitutionalChain(Chain):
                 **inputs,
                 callbacks=_run_manager.get_child(),
             )
-
+        print(response)
         initial_response = response
         input_prompt = self.chain.prompt.format(**inputs)
 
