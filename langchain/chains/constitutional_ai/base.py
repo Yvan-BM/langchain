@@ -51,6 +51,7 @@ class ConstitutionalChain(Chain):
     critique_chain: LLMChain
     revision_chain: LLMChain
     return_intermediate_steps: bool = False
+    return_principle_nanes: bool = False
 
     @classmethod
     def get_principles(
@@ -91,6 +92,8 @@ class ConstitutionalChain(Chain):
         """Defines the output keys."""
         if self.return_intermediate_steps:
             return ["output", "critiques_and_revisions", "initial_output"]
+        if self.return_principle_nanes:
+            return ["output", "principle_names"]
         return ["output"]
 
     def _call(
