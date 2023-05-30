@@ -137,8 +137,9 @@ class ConstitutionalChain(Chain):
             if "no critique needed" in critique.lower():
                 critiques_and_revisions.append((critique, ""))
                 continue
-            
+
             if response == inputs["question"]:
+                print(constitutional_principle.name)
                 to_review_principle_name.append(constitutional_principle.name)
                 continue
 
