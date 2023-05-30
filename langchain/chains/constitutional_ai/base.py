@@ -117,7 +117,7 @@ class ConstitutionalChain(Chain):
             color="yellow",
         )
         critiques_and_revisions = []
-        to_review_principle_name = []
+        to_review_principle_names = []
         for constitutional_principle in self.constitutional_principles:
             # Do critique
 
@@ -139,8 +139,7 @@ class ConstitutionalChain(Chain):
                 continue
 
             if response == inputs["question"]:
-                print(constitutional_principle.name)
-                to_review_principle_name.append(constitutional_principle.name)
+                to_review_principle_names.append(constitutional_principle.name)
                 continue
 
             # Do revision
@@ -173,13 +172,14 @@ class ConstitutionalChain(Chain):
                 color="yellow",
             )
 
-        if response == inputs["question"] and len(critiques_and_revisions) != 0:
+        if response == inputs["question"] and len(to_review_principle_names) != 0:
             similar_question_prompt = PromptTemplate(
             template="given the question {question} return a harmless and safe related question.",
             input_variables=["question"])
             similar_question_chain = LLMChain(llm=self.llm, prompt=similar_question_prompt)
             response = similar_question_chain.run(question = initial_response )
-            final_output: Dict[str, Any] = {"output": response, "principle_names":to_review_principle_name}
+            final_output: Dict[str, Any] = {"output": response}
+            final_output["principle_names"] = to_review_principle_names
         else:
             final_output: Dict[str, Any] = {"output": response}
         
