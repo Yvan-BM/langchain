@@ -117,6 +117,7 @@ class ConstitutionalChain(Chain):
             color="yellow",
         )
         critiques_and_revisions = []
+        to_review_principle_name = []
         for constitutional_principle in self.constitutional_principles:
             # Do critique
 
@@ -137,13 +138,7 @@ class ConstitutionalChain(Chain):
                 critiques_and_revisions.append((critique, ""))
                 continue
             
-            if response == inputs["question"]:
-                similar_question_prompt = PromptTemplate(
-                template="given the question {question} return a harmless and safe related question.",
-                input_variables=["question"])
-                similar_question_chain = LLMChain(llm=self.llm, prompt=similar_question_prompt)
-                response = similar_question_chain.run(question = initial_response )
-                break
+            to_review_principle_name.append(constitutional_principle.name)
 
             # Do revision
             revision = self.revision_chain.run(
@@ -175,7 +170,16 @@ class ConstitutionalChain(Chain):
                 color="yellow",
             )
 
-        final_output: Dict[str, Any] = {"output": response}
+        if response == inputs["question"] and len(critiques_and_revisions) != 0:
+            similar_question_prompt = PromptTemplate(
+            template="given the question {question} return a harmless and safe related question.",
+            input_variables=["question"])
+            similar_question_chain = LLMChain(llm=self.llm, prompt=similar_question_prompt)
+            response = similar_question_chain.run(question = initial_response )
+            final_output: Dict[str, Any] = {"output": response, "principle_names":to_review_principle_name}
+        else:
+            final_output: Dict[str, Any] = {"output": response}
+        
         if self.return_intermediate_steps:
             final_output["initial_output"] = initial_response
             final_output["critiques_and_revisions"] = critiques_and_revisions
