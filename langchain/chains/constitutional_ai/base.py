@@ -181,7 +181,7 @@ class ConstitutionalChain(Chain):
             input_variables=["question"])
             similar_question_chain = LLMChain(llm=self.llm, prompt=similar_question_prompt)
             response = similar_question_chain.run(question = initial_response )
-            final_output: Dict[str, Any] = {"output": response}
+            final_output: Dict[str, Any] = {"output": response + " principle_names " + str(to_review_principle_names)}
             final_output["principle_names"] = to_review_principle_names
         else:
             final_output: Dict[str, Any] = {"output": response}
