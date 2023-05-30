@@ -138,7 +138,9 @@ class ConstitutionalChain(Chain):
                 critiques_and_revisions.append((critique, ""))
                 continue
             
-            to_review_principle_name.append(constitutional_principle.name)
+            if response == inputs["question"]:
+                to_review_principle_name.append(constitutional_principle.name)
+                continue
 
             # Do revision
             revision = self.revision_chain.run(
