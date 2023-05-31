@@ -175,14 +175,17 @@ class ConstitutionalChain(Chain):
                 color="yellow",
             )
 
-        if response == inputs["question"] and len(to_review_principle_names) != 0:
-            similar_question_prompt = PromptTemplate(
-            template="given the question {question} return a harmless and safe related question.",
-            input_variables=["question"])
-            similar_question_chain = LLMChain(llm=self.llm, prompt=similar_question_prompt)
-            response = similar_question_chain.run(question = initial_response )
-            final_output: Dict[str, Any] = {"output": {"output":response, "principle_names": to_review_principle_names}}
-            final_output["principle_names"] = to_review_principle_names
+        if response == inputs["question"]:
+            if len(to_review_principle_names) != 0:
+                similar_question_prompt = PromptTemplate(
+                template="given the question {question} return a harmless and safe related question.",
+                input_variables=["question"])
+                similar_question_chain = LLMChain(llm=self.llm, prompt=similar_question_prompt)
+                response = similar_question_chain.run(question = initial_response )
+                final_output: Dict[str, Any] = {"output": {"output":response, "principle_names": to_review_principle_names}}
+                final_output["principle_names"] = to_review_principle_names
+            else:
+                final_output: Dict[str, Any] = {"output": {"output":response, "principle_names": None}}
         else:
             final_output: Dict[str, Any] = {"output": response}
         
